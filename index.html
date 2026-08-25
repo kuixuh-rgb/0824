@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#eef7ff" />
+  <meta name="description" content="旅行天氣小幫手：查詢台灣各地天氣、景點、美食與 Google Maps 導航。" />
+  <title>旅日好天氣｜旅行天氣小幫手</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="bg-orb orb-a"></div>
+  <div class="bg-orb orb-b"></div>
+
+  <header class="site-header">
+    <a class="brand" href="#" aria-label="回首頁">
+      <span class="brand-mark">☀️</span>
+      <span>
+        <strong>旅日好天氣</strong>
+        <small>Travel Weather</small>
+      </span>
+    </a>
+
+    <div class="header-actions">
+      <button id="locateBtn" class="ghost-btn" type="button" title="使用目前位置">
+        <span>📍</span><span class="desktop-only">使用目前位置</span>
+      </button>
+      <button id="themeBtn" class="icon-btn" type="button" title="切換深色模式" aria-label="切換深色模式">🌙</button>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="hero card">
+      <div class="hero-copy">
+        <div class="eyebrow">TAIWAN TRIP PLANNER</div>
+        <h1>旅行天氣</h1>
+        <p>選一個城市與日期，快速查看天氣、旅遊提醒、附近景點與美食。</p>
+
+        <form id="searchForm" class="search-panel">
+          <label class="field">
+            <span>旅遊縣市</span>
+            <select id="citySelect" required></select>
+          </label>
+
+          <label class="field">
+            <span>旅遊日期</span>
+            <input id="dateInput" type="date" required />
+          </label>
+
+          <button class="primary-btn" type="submit">
+            <span>搜尋</span><span>→</span>
+          </button>
+        </form>
+
+        <div class="quick-cities" id="quickCities"></div>
+      </div>
+
+      <div class="hero-visual" aria-hidden="true">
+        <div class="sun"></div>
+        <div class="cloud cloud-a">☁️</div>
+        <div class="cloud cloud-b">☁️</div>
+        <div class="hero-temp"><span id="heroTemp">--°</span><small id="heroCity">台灣</small></div>
+        <div class="mini-note">把天氣變成行程靈感 ✨</div>
+      </div>
+    </section>
+
+    <section id="statusBar" class="status-bar hidden" role="status"></section>
+
+    <section id="weatherSection" class="section hidden">
+      <div class="section-head">
+        <div>
+          <span class="section-kicker">WEATHER</span>
+          <h2><span id="selectedCityTitle">台中市</span>的旅行天氣</h2>
+        </div>
+        <button id="refreshBtn" class="ghost-btn" type="button">↻ 重新整理</button>
+      </div>
+
+      <div class="weather-grid">
+        <article class="current-weather card">
+          <div class="weather-topline">
+            <div>
+              <span class="muted" id="selectedDateText">今天</span>
+              <h3 id="weatherLabel">晴朗</h3>
+            </div>
+            <div class="weather-icon" id="weatherIcon">☀️</div>
+          </div>
+
+          <div class="big-temp">
+            <strong id="currentTemp">--°</strong>
+            <span>體感 <b id="feelsLike">--°</b></span>
+          </div>
+
+          <div class="metrics">
+            <div><span>🌧️</span><small>降雨機率</small><strong id="rainProb">--%</strong></div>
+            <div><span>💧</span><small>濕度</small><strong id="humidity">--%</strong></div>
+            <div><span>💨</span><small>風速</small><strong id="windSpeed">-- km/h</strong></div>
+            <div><span>☀️</span><small>UV 指數</small><strong id="uvIndex">--</strong></div>
+          </div>
+        </article>
+
+        <article class="trip-advice card">
+          <div class="advice-icon" id="adviceIcon">🧳</div>
+          <div>
+            <span class="muted">今日旅遊建議</span>
+            <h3 id="adviceTitle">正在分析天氣...</h3>
+            <p id="adviceText">我們會依照溫度與降雨機率給你簡單、生活化的旅遊提醒。</p>
+            <div id="adviceTags" class="tag-row"></div>
+          </div>
+        </article>
+      </div>
+
+      <article class="forecast card">
+        <div class="card-title-row">
+          <div>
+            <span class="muted">未來趨勢</span>
+            <h3>7 日天氣預報</h3>
+          </div>
+          <span class="muted">點日期可切換旅遊日</span>
+        </div>
+        <div id="forecastList" class="forecast-list"></div>
+      </article>
+    </section>
+    <section id="planSection" class="section hidden">
+      <div class="section-head">
+        <div>
+          <span class="section-kicker">ONE-DAY PLAN</span>
+          <h2>今天可以這樣玩</h2>
+        </div>
+        <button id="regeneratePlanBtn" class="ghost-btn" type="button">✨ 換一組</button>
+      </div>
+<article class="timeline card">
+        <div id="timeline"></div>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    <strong>旅日好天氣</strong>
+    <span>天氣資料：Open‑Meteo｜地點資料：OpenStreetMap / Overpass</span>
+    <span>實際營業時間與天候請以現場、店家公告及官方資訊為準。</span>
+  </footer>
+  <script src="./app.js" defer></script>
+</body>
+</html>
